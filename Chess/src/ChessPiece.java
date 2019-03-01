@@ -36,9 +36,14 @@ public class ChessPiece
         return new ChessPiece(' ');
     }
 	
-	public ChessPiece(char token)
+	public ChessPiece(char piece)
 	{
-		this.piece = token;
+		this.piece = piece;
+	}
+	
+	public boolean equals(ChessPiece other)
+	{
+		return this.piece == other.piece;
 	}
 	
 	public String toString(){
