@@ -7,8 +7,8 @@ import javax.swing.*;
 public class ChessBoardPanel extends JPanel
 {
 	public final int BOARD_SIZE = 8;
-	private ChessPiece[][] boardState;
-	private JLabel[][] boardStateLabel;
+	private Square[][] boardState = new Square[BOARD_SIZE][BOARD_SIZE];
+	private JLabel[][] boardStateLabel = new JLabel[BOARD_SIZE][BOARD_SIZE];
 	private boolean isWhitesTurn;
 	
 	public boolean getIsWhitesTurn()
@@ -16,14 +16,32 @@ public class ChessBoardPanel extends JPanel
 		return this.isWhitesTurn;
 	}
 	
+	public boolean validMove(String piece, int oldRow, 
+					int oldCol, int newRow, int newCol)
+	{
+
+		return true;
+	}
+	
 	public boolean correctPiece(String piece, int row, int col)
 	{
 		String boardPiece = boardStateLabel[row][col].getText();
 		if(Objects.equals(piece, boardPiece))
 		{
-			return true;
+//			if(getIsWhitesTurn() && 
+//					//boardStateLabel[row][col].getColor() == "white")
+//			{
+//				return true;
+//			} else
+//			{
+//				if(!getIsWhitesTurn() &&
+//						//boardStateLabel[row][col].getColor() == "black")
+//				{
+//					return true;
+//				}
+//			}
 		}
-		return false;
+		return true;
 	}
 	
 	public int columnCharToInt(char column)
@@ -77,49 +95,79 @@ public class ChessBoardPanel extends JPanel
 		boardStateLabel[row][col].setText(" ");
 	}
 	
+	public void setBoard()
+	{
+		for(int row = 0; row < boardState.length; row++)
+		{
+			for(int column = 0; column < boardState[row].length; column++)
+			{
+				boardState[row][column] = new Square(new Coordinate(row, column));
+			}
+		}
+	}
+	
 	public ChessBoardPanel()
 	{
 		int counter = 1;
 		setLayout(new GridLayout(8, 8));
-		boardState = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
-		boardStateLabel  = new JLabel[BOARD_SIZE][BOARD_SIZE];
-
-		for (int i = 0; i < boardState.length; i++)
+		setBoard();
+		
+		for (int row = 0; row < boardState.length; row++)
 		{
 			counter--; // counter is used to make checker board pattern
 
-			for (int j = 0; j < boardState[i].length; j++)
+			for (int column = 0; column < boardState[row].length; column++)
 			{
-				if(i == 0 || i == 7)
-				{
-					if(j == 0 || j == 7)
+				if(row == 0)
+				{	
+					if(column == 0 || column == 7)
 					{
-						boardState[i][j] = ChessPiece.createRook();
-					} else if(j == 1 || j == 6)
+						boardState[row][column].setPiece(new Rook('W'));
+					} else if(column == 1 || column == 6)
 					{
-						boardState[i][j] = ChessPiece.createKnight();
-					} else if(j == 2 || j == 5)
+						boardState[row][column].setPiece(new Knight('W'));
+					} else if(column == 2 || column == 5)
 					{
-						boardState[i][j] = ChessPiece.createBishop();
-					} else if(j == 3)
+						boardState[row][column].setPiece(new Bishop('W'));
+					} else if(column == 3)
 					{
-						boardState[i][j] = ChessPiece.createKing();
+						boardState[row][column].setPiece(new King('W'));
 					} else
 					{
-						boardState[i][j] = ChessPiece.createQueen();
+						boardState[row][column].setPiece(new Queen('W'));
 					}
 				}
-				else if (i == 1 || i == 6)
+				else if (row == 1)
 				{
-					boardState[i][j] = ChessPiece.createPawn();
-				} else
+					boardState[row][column].setPiece(new Pawn('W'));
+				} 
+				else if (row == 6)
 				{
-					boardState[i][j] = ChessPiece.createEmptyToken();
+					boardState[row][column].setPiece(new Pawn('B'));
+				}
+				else if (row == 7)
+				{
+					if(column == 0 || column == 7)
+					{
+						boardState[row][column].setPiece(new Rook('B'));
+					} else if(column == 1 || column == 6)
+					{
+						boardState[row][column].setPiece(new Knight('B'));
+					} else if(column == 2 || column == 5)
+					{
+						boardState[row][column].setPiece(new Bishop('B'));
+					} else if(column == 3)
+					{
+						boardState[row][column].setPiece(new King('B'));
+					} else
+					{
+						boardState[row][column].setPiece(new Queen('B'));
+					}
 				}
 
 				JLabel newLabel = new JLabel();
-				newLabel.setText(boardState[i][j].toString());
-				boardStateLabel[i][j] = newLabel;
+				newLabel.setText(boardState[row][column].toString());
+				boardStateLabel[row][column] = newLabel;
 				
 				if ((counter % 2) == 0)
 				{
@@ -128,10 +176,10 @@ public class ChessBoardPanel extends JPanel
 				{
 					newLabel.setBackground(Color.LIGHT_GRAY);
 				}
-				if(i < 2) 
+				if(row < 2) 
 				{
 					newLabel.setForeground(Color.WHITE);
-				} else
+				} else if(row > 5)
 				{
 					newLabel.setForeground(Color.BLACK);
 				}

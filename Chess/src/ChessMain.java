@@ -84,21 +84,18 @@ public class ChessMain {
 			oldRow--;
 			newRow--;
 			
-			System.out.println(piece);
-			System.out.println(oldCol);
-			System.out.println(oldRow);
-			System.out.println(newCol);
-			System.out.println(newRow);
-			
-			if(newBoard.correctPiece(piece, oldRow, oldCol))
+			if(newBoard.correctPiece(piece, oldRow, oldCol)
+					&& newBoard.validMove(piece, oldRow, oldCol, newRow, newCol))
 			{
 				System.out.println("Successful move.");
 				newBoard.placePiece(piece, newRow, newCol);
 				newBoard.removePiece(oldRow, oldCol);
+			} else
+			{
+				System.out.println("Invalid move.");
 			}
 			
 		} while (!newBoard.isGameOver());
 	}
-
 
 }
